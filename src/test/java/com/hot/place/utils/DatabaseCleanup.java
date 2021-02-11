@@ -1,6 +1,7 @@
 package com.hot.place.utils;
 
 import com.google.common.base.CaseFormat;
+import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import org.springframework.test.context.ActiveProfiles;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @ActiveProfiles("test")
+@DisplayName("데이터 초기화")
 public class DatabaseCleanup implements InitializingBean {
     @PersistenceContext
     private EntityManager entityManager;
