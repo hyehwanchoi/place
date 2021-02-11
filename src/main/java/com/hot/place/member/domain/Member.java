@@ -1,14 +1,15 @@
 package com.hot.place.member.domain;
 
+import com.hot.place.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Data @EqualsAndHashCode
+@Data @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor @AllArgsConstructor @RequiredArgsConstructor
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
-public class Member {
+public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private long id;
