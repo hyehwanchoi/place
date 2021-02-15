@@ -26,11 +26,19 @@ public class MemberService {
     }
 
     public MemberResponse saveMember(MemberRequest request) {
-        Member persistMember = memberRepository.save(new Member(request.getName(), request.getEmail(), request.getPassword()));
+        Member persistMember = memberRepository.save(Member.builder().name(request.getName())
+                                                                            .email(request.getEmail())
+                                                                            .password(request.getPassword())
+                                                                            .build());
         return MemberResponse.of(persistMember);
     }
 
-    public Member findMemberResponseById(long id) {
+    public Member findMemberById(long id) {
         return memberRepository.findById(id).orElseThrow(RuntimeException::new);
+    }
+
+    public void addPoint(long id, int point) {
+        Member member = findMemberById(id);
+        member.addPoint(point);
     }
 }
