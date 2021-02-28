@@ -2,67 +2,100 @@ package com.hot.place.member.ui;
 
 import com.hot.place.AcceptanceTest;
 import com.hot.place.member.dto.MemberRequest;
-import io.restassured.RestAssured;
+import com.hot.place.member.dto.MemberResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
-@SuppressWarnings("NonAsciiCharacters")
+@DisplayName("회원 관련 기능")
 class MemberControllerTest extends AcceptanceTest {
 
-    private MemberRequest memberRequest;
+    private MemberRequest memberRequest1;
+    private MemberRequest memberRequest2;
 
     @BeforeEach
     void setup() {
-        memberRequest = MemberRequest.builder()
+        memberRequest1 = MemberRequest.builder()
                                     .name("최혜환")
                                     .email("chh9975@naver.com")
                                     .password("1234").build();
+        memberRequest2 = MemberRequest.builder()
+                            .name("김수연")
+                            .email("suyn1121@naver.com")
+                            .password("1234").build();
     }
 
     @Test
-    void insertTest() {
+    void insertMember() {
         // when
-        ExtractableResponse<Response> response = 회원_추가_요청(memberRequest);
+        ExtractableResponse<Response> response = MemberUtil.회원_추가_요청(memberRequest1);
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @Test
-    void getTest() {
+    void getAllMember() {
         // given
-        회원_추가_요청(memberRequest);
+        MemberUtil.회원_추가_요청(memberRequest1);
 
         // when
-        ExtractableResponse<Response> response = 모든_회원_조회_요청();
+        ExtractableResponse<Response> response = MemberUtil.모든_회원_조회_요청();
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    private ExtractableResponse<Response> 회원_추가_요청(MemberRequest memberRequest) {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(memberRequest)
-                .when().post("/member")
-                .then().log().all()
-                .extract();
+    @Test
+    void getMember() {
+        // given
+        ExtractableResponse<Response> createResponse = MemberUtil.회원_추가_요청(memberRequest1);
 
+        // when
+        ExtractableResponse<Response> response = MemberUtil.회원_조회_요청(createResponse.as(MemberResponse.class).getId());
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    private ExtractableResponse<Response> 모든_회원_조회_요청() {
-        return RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/member")
-                .then().log().all()
-                .extract();
+    @Test
+    void addPoint() {
+        // gvien
+        ExtractableResponse<Response> createResponse = MemberUtil.회원_추가_요청(memberRequest1);
+
+        // when
+        ExtractableResponse<Response> response = MemberUtil.회원_포인트_추가_요청(createResponse.as(MemberResponse.class).getId(), 2);
+
+        // then
+        assertAll(
+            () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+            () -> assertThat(response.jsonPath().getObject(".", MemberResponse.class).getPoint()).isEqualTo(2)
+        );
+    }
+
+    @Test
+    void getPoint() {
+        // gvien
+        ExtractableResponse<Response> createResponse1 = MemberUtil.회원_추가_요청(memberRequest1);
+        ExtractableResponse<Response> createResponse2 = MemberUtil.회원_추가_요청(memberRequest2);
+        MemberUtil.회원_포인트_추가_요청(createResponse1.as(MemberResponse.class).getId(), 2);
+        MemberUtil.회원_포인트_추가_요청(createResponse1.as(MemberResponse.class).getId(), 4);
+        MemberUtil.회원_포인트_추가_요청(createResponse2.as(MemberResponse.class).getId(), 3);
+
+        // when
+        ExtractableResponse<Response> response1 = MemberUtil.회원_조회_요청(createResponse1.jsonPath().getObject(".", MemberResponse.class).getId());
+        ExtractableResponse<Response> response2 = MemberUtil.회원_조회_요청(createResponse2.jsonPath().getObject(".", MemberResponse.class).getId());
+
+        // then
+        assertAll(
+                () -> assertThat(response1.jsonPath().getObject(".", MemberResponse.class).getPoint()).isEqualTo(6),
+                () -> assertThat(response2.jsonPath().getObject(".", MemberResponse.class).getPoint()).isEqualTo(3)
+        );
     }
 }
