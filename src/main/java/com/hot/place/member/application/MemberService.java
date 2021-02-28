@@ -37,8 +37,10 @@ public class MemberService {
         return memberRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
-    public void addPoint(long id, int point) {
+    public MemberResponse addPoint(long id, int point) {
         Member member = findMemberById(id);
         member.addPoint(point);
+
+        return MemberResponse.of(member);
     }
 }

@@ -35,8 +35,7 @@ public class MemberController {
     }
 
     @PutMapping(value = "/{id}/point")
-    public ResponseEntity addPoint(@PathVariable long id, @RequestParam int point) {
-        memberService.addPoint(id, point);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<MemberResponse> addPoint(@PathVariable long id, @RequestParam int point) {
+        return ResponseEntity.ok().body(memberService.addPoint(id, point));
     }
 }
