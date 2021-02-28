@@ -26,11 +26,16 @@ public class MemberController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity findMemberById(@PathVariable long id) {
-        return ResponseEntity.ok(memberService.findMemberResponseById(id));
+        return ResponseEntity.ok(memberService.findMemberById(id));
     }
 
     @GetMapping
     public ResponseEntity<List<MemberResponse>> findAllMember() {
         return ResponseEntity.ok(memberService.findAllMembers());
+    }
+
+    @PutMapping(value = "/{id}/point")
+    public ResponseEntity<MemberResponse> addPoint(@PathVariable long id, @RequestParam int point) {
+        return ResponseEntity.ok().body(memberService.addPoint(id, point));
     }
 }

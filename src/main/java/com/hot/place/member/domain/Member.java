@@ -5,13 +5,13 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Entity
-@Data @EqualsAndHashCode(callSuper = false)
-@NoArgsConstructor @AllArgsConstructor @RequiredArgsConstructor
+@Entity @Getter
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 public class Member extends BaseEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NonNull
@@ -22,4 +22,19 @@ public class Member extends BaseEntity {
 
     @NonNull
     private String password;
+
+    int point;
+
+    @Builder
+    private Member(long id, @NonNull String name, @NonNull String email, @NonNull String password, int point) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.point = point;
+    }
+
+    public void addPoint(int point) {
+        this.point += point;
+    }
 }
