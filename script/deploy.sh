@@ -4,10 +4,10 @@ REPOSITORY=/home/ec2-user/app/S3
 PROJECT_NAME=place
 
 echo "> Build 파일복사"
-cp $REPOSITORY/zip/*.jar $REPOSITORY
+cp $REPOSITORY/zip/*.war $REPOSITORY
 
 echo "> 현재 구동 중인 애플리케이션 pid 확인"
-CURRENT_PID=$(pgrep -fl place | grep jar | awk '{print $1}')
+CURRENT_PID=$(pgrep -fl place | grep war | awk '{print $1}')
 
 echo "현재 구동 중인 애플리케이션 pid: $CURRENT_PID"
 
@@ -21,19 +21,19 @@ fi
 
 echo "> 새 애플리케이션 배포"
 
-JAR_NAME=$(ls -tr $REPOSITORY/*.jar | tail -n 1)
+WAR_NAME=$(ls -tr $REPOSITORY/*.war | tail -n 1)
 
-echo "> JAR Name: $JAR_NAME"
+echo "> WAR Name: $WAR_NAME"
 
-echo "> $JAR_NAME 에 실행권한 추가"
+echo "> $WAR_NAME 에 실행권한 추가"
 
-chmod +x $JAR_NAME
+chmod +x $WAR_NAME
 
-echo "> $JAR_NAME 실행"
+echo "> $WAR_NAME 실행"
 
 nohup java -jar \
-  -Dspring.config.location=classpath:/application.properties,
-                            classpath:/application-real.properties,
+  -Dspring.config.location=classpath:/application.yml,
+                            classpath:/application-real.yml,
                             /home/ec2-user/app/application-real-db.properties \
   -Dspring.profiles.active=real \
-  $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
+  $WAR_NAME > $REPOSITORY/nohup.out 2>&1 &
