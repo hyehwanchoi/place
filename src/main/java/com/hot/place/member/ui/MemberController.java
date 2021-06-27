@@ -24,6 +24,10 @@ public class MemberController {
         return ResponseEntity.created(URI.create("/member/" + memberResponse.getId())).body(memberResponse);
     }
 
+    /**
+     * 사용자 조회
+     * @return
+     */
     @GetMapping(value = "/{id}")
     public ResponseEntity findMemberById(@PathVariable long id) {
         return ResponseEntity.ok(memberService.findMemberById(id));
@@ -36,6 +40,7 @@ public class MemberController {
 
     @PutMapping(value = "/{id}/point")
     public ResponseEntity<MemberResponse> addPoint(@PathVariable long id, @RequestParam int point) {
-        return ResponseEntity.ok().body(memberService.addPoint(id, point));
+        memberService.addPoint(id, point);
+        return ResponseEntity.ok().build();
     }
 }

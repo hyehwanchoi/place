@@ -27,9 +27,10 @@ public class MemberService {
 
     public MemberResponse saveMember(MemberRequest request) {
         Member persistMember = memberRepository.save(Member.builder().name(request.getName())
-                                                                            .email(request.getEmail())
-                                                                            .password(request.getPassword())
-                                                                            .build());
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .point(request.getPoint())
+                .build());
         return MemberResponse.of(persistMember);
     }
 
@@ -37,10 +38,8 @@ public class MemberService {
         return memberRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
-    public MemberResponse addPoint(long id, int point) {
-        Member member = findMemberById(id);
+    public void addPoint(long id, int point) {
+        Member member = memberRepository.findById(id).orElseThrow(RuntimeException::new);
         member.addPoint(point);
-
-        return MemberResponse.of(member);
     }
 }
