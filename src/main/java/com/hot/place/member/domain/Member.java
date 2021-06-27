@@ -23,7 +23,7 @@ public class Member extends BaseEntity {
     @NonNull
     private String password;
 
-    int point;
+    private int point;
 
     @Builder
     private Member(long id, @NonNull String name, @NonNull String email, @NonNull String password, int point) {

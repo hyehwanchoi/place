@@ -10,6 +10,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -41,6 +44,20 @@ class MemberControllerTest extends AcceptanceTest {
     }
 
     @Test
+    void insertManyMember() {
+        List<MemberRequest> memberRequestList = new ArrayList<>();
+        memberRequestList.add(memberRequest1);
+        memberRequestList.add(memberRequest2);
+
+        ExtractableResponse<Response> response;
+        for (MemberRequest request : memberRequestList) {
+            MemberUtil.회원_추가_요청(request);
+        }
+
+//        assertThat(MemberUtil.모든_회원_조회_요청().).isEqualTo()
+    }
+
+    @Test
     void getAllMember() {
         // given
         MemberUtil.회원_추가_요청(memberRequest1);
@@ -62,6 +79,14 @@ class MemberControllerTest extends AcceptanceTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    void getBasePoint() {
+        // gvien
+        ExtractableResponse<Response> createResponse = MemberUtil.회원_추가_요청(memberRequest1);
+
+        assertThat(createResponse.jsonPath().getObject(".", MemberResponse.class).getPoint()).isEqualTo(0);
     }
 
     @Test
