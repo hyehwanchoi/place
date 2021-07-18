@@ -89,20 +89,20 @@ class MemberControllerTest extends AcceptanceTest {
         assertThat(createResponse.jsonPath().getObject(".", MemberResponse.class).getPoint()).isEqualTo(0);
     }
 
-    @Test
-    void addPoint() {
-        // gvien
-        ExtractableResponse<Response> createResponse = MemberUtil.회원_추가_요청(memberRequest1);
-
-        // when
-        ExtractableResponse<Response> response = MemberUtil.회원_포인트_추가_요청(createResponse.as(MemberResponse.class).getId(), 2);
-
-        // then
-        assertAll(
-            () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-            () -> assertThat(response.jsonPath().getObject(".", MemberResponse.class).getPoint()).isEqualTo(2)
-        );
-    }
+//    @Test
+//    void addPoint() {
+//        // gvien
+//        ExtractableResponse<Response> createResponse = MemberUtil.회원_추가_요청(memberRequest1);
+//
+//        // when
+//        ExtractableResponse<Response> response = MemberUtil.회원_포인트_추가_요청(createResponse.as(MemberResponse.class).getId(), 2);
+//
+//        // then
+//        assertAll(
+//            () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+//            () -> assertThat(response.jsonPath().getObject(".", MemberResponse.class).getPoint()).isEqualTo(2)
+//        );
+//    }
 
     @Test
     void getPoint() {

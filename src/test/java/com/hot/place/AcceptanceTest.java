@@ -1,6 +1,6 @@
 package com.hot.place;
 
-import com.hot.place.utils.DatabaseCleanup;
+//import com.hot.place.utils.DatabaseCleanup;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +12,12 @@ public class AcceptanceTest {
     @LocalServerPort
     int port;
 
-    @Autowired
-    private DatabaseCleanup databaseCleanup;
+//    @Autowired
+//    private DatabaseCleanup databaseCleanup;
 
-    @BeforeEach
-    public void setUp() {
-        RestAssured.port = port;
-        databaseCleanup.execute();
-    }
+//    @BeforeEach
+//    public void setUp() {
+//        RestAssured.port = port;
+//        databaseCleanup.execute();
+//    }
 }
