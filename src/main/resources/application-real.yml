@@ -7,3 +7,9 @@ spring:
 
   session:
     store-type: jdbc
+
+  datasource:
+    url: jdbc:mysql://115.68.158.204:3306/dev_db
+    username: copykiller-dev
+    password: qhdksdkagh
+    driver-class-name: com.mysql.cj.jdbc.Driver
